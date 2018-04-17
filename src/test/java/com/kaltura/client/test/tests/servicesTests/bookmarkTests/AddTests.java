@@ -23,13 +23,10 @@ public class AddTests extends BaseTest {
 
     private Client client;
     private long assetId;
-    private AssetType type;
     private int fileId;
     private BookmarkActionType actionType;
     private int position = 0;
     private List<String> assetList = new ArrayList<>();
-    // instantiate Bookmark object
-    private Bookmark bookmark = new Bookmark();
     // instantiate BookmarkPlayerData object
     private BookmarkPlayerData playerData = new BookmarkPlayerData();
     // instantiate BookmarkFilter object
@@ -43,15 +40,13 @@ public class AddTests extends BaseTest {
 
         assetId = mediaAsset.getId();
 
-        type = AssetType.get(AssetType.MEDIA.getValue());
         AssetReferenceType assetReferenceType = AssetReferenceType.get(AssetReferenceType.MEDIA.getValue());
         Response<Asset> assetResponse = AssetServiceImpl.get(client, String.valueOf(assetId), assetReferenceType);
         fileId = assetResponse.results.getMediaFiles().get(0).getId();
-        actionType = BookmarkActionType.get(BookmarkActionType.FIRST_PLAY.getValue());
+        actionType = BookmarkActionType.FIRST_PLAY;
 
         assetList.add(String.valueOf(assetId));
         // Initialize bookmark object parameters
-        bookmark = BookmarkUtils.addBookmark(0, assetList.get(0), fileId, AssetType.MEDIA, BookmarkActionType.FIRST_PLAY);
 
         // Initialize bookmarkFilter object parameters
         bookmarkFilter = BookmarkUtils.listBookmark(BookmarkOrderBy.POSITION_ASC, AssetType.MEDIA, assetList);
@@ -60,7 +55,8 @@ public class AddTests extends BaseTest {
     @Description("bookmark/action/add - first play")
     @Test
     private void firstPlayback() {
-
+        position = 0;
+        Bookmark bookmark = BookmarkUtils.addBookmark(position, assetList.get(0), fileId, AssetType.MEDIA, BookmarkActionType.FIRST_PLAY);
         // Invoke bookmark/action/add request
         Response<Boolean> booleanResponse = BookmarkServiceImpl.add(client, bookmark);
         // Verify response return true
@@ -71,25 +67,22 @@ public class AddTests extends BaseTest {
 
         // Invoke bookmark/action/list to verify insertion of bookmark position
         Response<ListResponse<Bookmark>> bookmarkListResponse = BookmarkServiceImpl.list(client, bookmarkFilter);
-        Bookmark bookmark1 = bookmarkListResponse.results.getObjects().get(0);
-
-        // Assertions
-        // ***********************************************
+        Bookmark bookmark2 = bookmarkListResponse.results.getObjects().get(0);
 
         // Match content of asset id
-        assertThat(bookmark1.getId()).isEqualTo(String.valueOf(assetId));
+        assertThat(bookmark2.getId()).isEqualTo(String.valueOf(assetId));
 
         // Match content of asset position
-        assertThat(bookmark1.getPosition()).isEqualTo(this.position);
+        assertThat(bookmark2.getPosition()).isEqualTo(position);
 
         // verify finishedWatching = false
-        assertThat(bookmark1.getFinishedWatching()).isFalse();
+        assertThat(bookmark2.getFinishedWatching()).isFalse();
 
         // Verify positionOwner = user
-        assertThat(bookmark1.getPositionOwner()).isEqualTo(PositionOwner.USER);
+        assertThat(bookmark2.getPositionOwner()).isEqualTo(PositionOwner.USER);
 
         // Verify asset type = media
-        assertThat(bookmark1.getType()).isEqualTo(AssetType.MEDIA);
+        assertThat(bookmark2.getType()).isEqualTo(AssetType.MEDIA);
 
         // Verify total count = 1
         assertThat(bookmarkListResponse.results.getTotalCount()).isEqualTo(1);
@@ -100,10 +93,10 @@ public class AddTests extends BaseTest {
     @Test
     private void stopPlayback() {
         // Set action type to "PAUSE"
-        actionType = BookmarkActionType.get(BookmarkActionType.PAUSE.getValue());
+        actionType = BookmarkActionType.PAUSE;
         playerData.setAction(actionType);
         position = 30;
-        bookmark.setPosition(position);
+        Bookmark bookmark = BookmarkUtils.addBookmark(position, assetList.get(0), fileId, AssetType.MEDIA, actionType);
 
         // Invoke bookmark/action/add request
         Response<Boolean> booleanResponse = BookmarkServiceImpl.add(client, bookmark);
@@ -123,10 +116,10 @@ public class AddTests extends BaseTest {
     @Description("bookmark/action/add - 95% watching == finish watching")
     @Test
     private void watchingNinetyFive() {
-        actionType = BookmarkActionType.get(BookmarkActionType.PLAY.getValue());
+        actionType = BookmarkActionType.PLAY;
         playerData.setAction(actionType);
         position = 999;
-        bookmark.setPosition(position);
+        Bookmark bookmark = BookmarkUtils.addBookmark(position, assetList.get(0), fileId, AssetType.MEDIA, actionType);
 
         // Invoke bookmark/action/add request
         Response<Boolean> booleanResponse = BookmarkServiceImpl.add(client, bookmark);
@@ -139,9 +132,6 @@ public class AddTests extends BaseTest {
         Response<ListResponse<Bookmark>> bookmarkListResponse3 = BookmarkServiceImpl.list(client, bookmarkFilter);
         Bookmark bookmark3 = bookmarkListResponse3.results.getObjects().get(0);
 
-        // Assertions
-        // ***********************************************
-
         // Verify finishedWatching = true
         assertThat(bookmark3.getFinishedWatching()).isTrue();
 
@@ -150,11 +140,11 @@ public class AddTests extends BaseTest {
     @Description("bookmark/action/add - back to start - position:0")
     @Test
     private void backToStart() {
-        actionType = BookmarkActionType.get(BookmarkActionType.STOP.getValue());
+        actionType = BookmarkActionType.STOP;
         playerData.setAction(actionType);
         position = 0;
-        bookmark.setPosition(position);
-        Response<Boolean> booleanResponse = BookmarkServiceImpl.add(client, bookmark);
+        Bookmark bookmark = BookmarkUtils.addBookmark(position, assetList.get(0), fileId, AssetType.MEDIA, actionType);
+        BookmarkServiceImpl.add(client, bookmark);
 
         Response<ListResponse<Bookmark>> bookmarkListResponse4 = BookmarkServiceImpl.list(client, bookmarkFilter);
         Bookmark bookmark4 = bookmarkListResponse4.results.getObjects().get(0);
@@ -167,10 +157,10 @@ public class AddTests extends BaseTest {
     @Test
     private void finishWatching() {
         // Set action type to "FINISH"
-        actionType = BookmarkActionType.get(BookmarkActionType.FINISH.getValue());
+        actionType = BookmarkActionType.FINISH;
         playerData.setAction(actionType);
-        position = 60;
-        bookmark.setPosition(position);
+        position = 999;
+        Bookmark bookmark = BookmarkUtils.addBookmark(position, assetList.get(0), fileId, AssetType.MEDIA, actionType);
 
         // Invoke bookmark/action/add request
         Response<Boolean> booleanResponse = BookmarkServiceImpl.add(client, bookmark);
@@ -196,7 +186,8 @@ public class AddTests extends BaseTest {
     @Description("bookmark/action/add - empty asset id")
     @Test
     private void emptyAssetId() {
-        bookmark = BookmarkUtils.addBookmark(0, null, fileId, AssetType.MEDIA, BookmarkActionType.FIRST_PLAY);
+        actionType = BookmarkActionType.FIRST_PLAY;
+        Bookmark bookmark = BookmarkUtils.addBookmark(0, null, fileId, AssetType.MEDIA, actionType);
         Response<Boolean> booleanResponse = BookmarkServiceImpl.add(client, bookmark);
         assertThat(booleanResponse.results).isNull();
         // Verify exception returned - code: 500003 ("Invalid Asset id")
