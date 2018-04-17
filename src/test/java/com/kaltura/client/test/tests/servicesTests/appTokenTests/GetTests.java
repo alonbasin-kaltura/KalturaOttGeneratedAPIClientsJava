@@ -53,7 +53,7 @@ public class GetTests extends BaseTest {
         assertThat(getAppTokenResponse.results.getSessionUserId()).isEqualTo(sessionUserId);
     }
 
-    @Description("AppToken/action/get")
+    @Description("AppToken/action/get - with invalid id")
     @Test
     private void getAppTokenWithInvalidId() {
         Response<AppToken> getAppTokenResponse = AppTokenServiceImpl.get(client, "1234");
