@@ -27,8 +27,9 @@
 // ===================================================================================================
 package com.kaltura.client.services;
 
-import com.kaltura.client.types.PartnerConfiguration;
-import com.kaltura.client.types.PartnerConfigurationFilter;
+import com.kaltura.client.types.Bulk;
+import com.kaltura.client.types.BulkFilter;
+import com.kaltura.client.types.FilterPager;
 import com.kaltura.client.utils.request.ListResponseRequestBuilder;
 import com.kaltura.client.utils.request.RequestBuilder;
 
@@ -39,43 +40,53 @@ import com.kaltura.client.utils.request.RequestBuilder;
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
 
-public class PartnerConfigurationService {
+public class BulkService {
 	
-	public static class ListPartnerConfigurationBuilder extends ListResponseRequestBuilder<PartnerConfiguration, PartnerConfiguration.Tokenizer, ListPartnerConfigurationBuilder> {
+	public static class ListBulkBuilder extends ListResponseRequestBuilder<Bulk, Bulk.Tokenizer, ListBulkBuilder> {
 		
-		public ListPartnerConfigurationBuilder(PartnerConfigurationFilter filter) {
-			super(PartnerConfiguration.class, "partnerconfiguration", "list");
+		public ListBulkBuilder(BulkFilter filter, FilterPager pager) {
+			super(Bulk.class, "bulk", "list");
 			params.add("filter", filter);
+			params.add("pager", pager);
 		}
 	}
 
+	public static ListBulkBuilder list()  {
+		return list(null);
+	}
+
+	public static ListBulkBuilder list(BulkFilter filter)  {
+		return list(filter, null);
+	}
+
 	/**
-	 * Get the list of PartnerConfiguration
+	 * List bulk actions
 	 * 
-	 * @param filter filter by PartnerConfiguration type
+	 * @param filter Filtering the bulk action request
+	 * @param pager Paging the request
 	 */
-    public static ListPartnerConfigurationBuilder list(PartnerConfigurationFilter filter)  {
-		return new ListPartnerConfigurationBuilder(filter);
+    public static ListBulkBuilder list(BulkFilter filter, FilterPager pager)  {
+		return new ListBulkBuilder(filter, pager);
 	}
 	
-	public static class UpdatePartnerConfigurationBuilder extends RequestBuilder<Boolean, String, UpdatePartnerConfigurationBuilder> {
+	public static class ServeLogBulkBuilder extends RequestBuilder<Bulk, Bulk.Tokenizer, ServeLogBulkBuilder> {
 		
-		public UpdatePartnerConfigurationBuilder(PartnerConfiguration configuration) {
-			super(Boolean.class, "partnerconfiguration", "update");
-			params.add("configuration", configuration);
+		public ServeLogBulkBuilder(long id) {
+			super(Bulk.class, "bulk", "serveLog");
+			params.add("id", id);
+		}
+		
+		public void id(String multirequestToken) {
+			params.add("id", multirequestToken);
 		}
 	}
 
 	/**
-	 * Update Partner Configuration
+	 * ServeLog action returns the log file for the bulk action
 	 * 
-	 * @param configuration Partner Configuration
-	 *             possible configuration type: 
-	 *             "configuration": { "value": 0, "partner_configuration_type": {
-	 * "type": "OSSAdapter", "objectType": "KalturaPartnerConfigurationHolder" },
-	 *             "objectType": "KalturaBillingPartnerConfig"}
+	 * @param id bulk action id
 	 */
-    public static UpdatePartnerConfigurationBuilder update(PartnerConfiguration configuration)  {
-		return new UpdatePartnerConfigurationBuilder(configuration);
+    public static ServeLogBulkBuilder serveLog(long id)  {
+		return new ServeLogBulkBuilder(id);
 	}
 }

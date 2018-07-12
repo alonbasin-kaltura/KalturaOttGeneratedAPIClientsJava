@@ -29,8 +29,8 @@ package com.kaltura.client.types;
 
 import com.google.gson.JsonObject;
 import com.kaltura.client.Params;
-import com.kaltura.client.enums.RuleConditionType;
-import com.kaltura.client.types.SlimAsset;
+import com.kaltura.client.enums.BatchJobStatus;
+import com.kaltura.client.types.ObjectBase;
 import com.kaltura.client.utils.GsonParser;
 import com.kaltura.client.utils.request.MultiRequestBuilder;
 
@@ -41,69 +41,72 @@ import com.kaltura.client.utils.request.MultiRequestBuilder;
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
 
-/**
- * Asset rule filter
- */
 @SuppressWarnings("serial")
-@MultiRequestBuilder.Tokenizer(AssetRuleFilter.Tokenizer.class)
-public class AssetRuleFilter extends Filter {
+@MultiRequestBuilder.Tokenizer(Bulk.Tokenizer.class)
+public class Bulk extends ObjectBase {
 	
-	public interface Tokenizer extends Filter.Tokenizer {
-		String conditionsContainType();
-		SlimAsset.Tokenizer assetApplied();
+	public interface Tokenizer extends ObjectBase.Tokenizer {
+		String id();
+		String status();
+		String createDate();
+		String updateDate();
 	}
 
 	/**
-	 * Indicates which asset rule list to return by it KalturaRuleConditionType.       
-	        Default value: KalturaRuleConditionType.COUNTRY
+	 * Bulk identifier
 	 */
-	private RuleConditionType conditionsContainType;
+	private Long id;
 	/**
-	 * Indicates if to return an asset rule list that related to specific asset
+	 * Status
 	 */
-	private SlimAsset assetApplied;
+	private BatchJobStatus status;
+	/**
+	 * Specifies when was the bulk action created. Date and time represented as epoch
+	 */
+	private Long createDate;
+	/**
+	 * Specifies when was the bulk action last updated. Date and time represented as
+	  epoch
+	 */
+	private Long updateDate;
 
-	// conditionsContainType:
-	public RuleConditionType getConditionsContainType(){
-		return this.conditionsContainType;
+	// id:
+	public Long getId(){
+		return this.id;
 	}
-	public void setConditionsContainType(RuleConditionType conditionsContainType){
-		this.conditionsContainType = conditionsContainType;
+	// status:
+	public BatchJobStatus getStatus(){
+		return this.status;
 	}
-
-	public void conditionsContainType(String multirequestToken){
-		setToken("conditionsContainType", multirequestToken);
+	// createDate:
+	public Long getCreateDate(){
+		return this.createDate;
 	}
-
-	// assetApplied:
-	public SlimAsset getAssetApplied(){
-		return this.assetApplied;
-	}
-	public void setAssetApplied(SlimAsset assetApplied){
-		this.assetApplied = assetApplied;
+	// updateDate:
+	public Long getUpdateDate(){
+		return this.updateDate;
 	}
 
-
-	public AssetRuleFilter() {
+	public Bulk() {
 		super();
 	}
 
-	public AssetRuleFilter(JsonObject jsonObject) throws APIException {
+	public Bulk(JsonObject jsonObject) throws APIException {
 		super(jsonObject);
 
 		if(jsonObject == null) return;
 
 		// set members values:
-		conditionsContainType = RuleConditionType.get(GsonParser.parseString(jsonObject.get("conditionsContainType")));
-		assetApplied = GsonParser.parseObject(jsonObject.getAsJsonObject("assetApplied"), SlimAsset.class);
+		id = GsonParser.parseLong(jsonObject.get("id"));
+		status = BatchJobStatus.get(GsonParser.parseString(jsonObject.get("status")));
+		createDate = GsonParser.parseLong(jsonObject.get("createDate"));
+		updateDate = GsonParser.parseLong(jsonObject.get("updateDate"));
 
 	}
 
 	public Params toParams() {
 		Params kparams = super.toParams();
-		kparams.add("objectType", "KalturaAssetRuleFilter");
-		kparams.add("conditionsContainType", this.conditionsContainType);
-		kparams.add("assetApplied", this.assetApplied);
+		kparams.add("objectType", "KalturaBulk");
 		return kparams;
 	}
 

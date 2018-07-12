@@ -27,8 +27,7 @@
 // ===================================================================================================
 package com.kaltura.client.services;
 
-import com.kaltura.client.types.PartnerConfiguration;
-import com.kaltura.client.types.PartnerConfigurationFilter;
+import com.kaltura.client.types.Ratio;
 import com.kaltura.client.utils.request.ListResponseRequestBuilder;
 import com.kaltura.client.utils.request.RequestBuilder;
 
@@ -39,43 +38,59 @@ import com.kaltura.client.utils.request.RequestBuilder;
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
 
-public class PartnerConfigurationService {
+public class RatioService {
 	
-	public static class ListPartnerConfigurationBuilder extends ListResponseRequestBuilder<PartnerConfiguration, PartnerConfiguration.Tokenizer, ListPartnerConfigurationBuilder> {
+	public static class AddRatioBuilder extends RequestBuilder<Ratio, Ratio.Tokenizer, AddRatioBuilder> {
 		
-		public ListPartnerConfigurationBuilder(PartnerConfigurationFilter filter) {
-			super(PartnerConfiguration.class, "partnerconfiguration", "list");
-			params.add("filter", filter);
+		public AddRatioBuilder(Ratio ratio) {
+			super(Ratio.class, "ratio", "add");
+			params.add("ratio", ratio);
 		}
 	}
 
 	/**
-	 * Get the list of PartnerConfiguration
+	 * Add new group ratio
 	 * 
-	 * @param filter filter by PartnerConfiguration type
+	 * @param ratio Ratio to add for the partner
 	 */
-    public static ListPartnerConfigurationBuilder list(PartnerConfigurationFilter filter)  {
-		return new ListPartnerConfigurationBuilder(filter);
+    public static AddRatioBuilder add(Ratio ratio)  {
+		return new AddRatioBuilder(ratio);
 	}
 	
-	public static class UpdatePartnerConfigurationBuilder extends RequestBuilder<Boolean, String, UpdatePartnerConfigurationBuilder> {
+	public static class ListRatioBuilder extends ListResponseRequestBuilder<Ratio, Ratio.Tokenizer, ListRatioBuilder> {
 		
-		public UpdatePartnerConfigurationBuilder(PartnerConfiguration configuration) {
-			super(Boolean.class, "partnerconfiguration", "update");
-			params.add("configuration", configuration);
+		public ListRatioBuilder() {
+			super(Ratio.class, "ratio", "list");
 		}
 	}
 
 	/**
-	 * Update Partner Configuration
-	 * 
-	 * @param configuration Partner Configuration
-	 *             possible configuration type: 
-	 *             "configuration": { "value": 0, "partner_configuration_type": {
-	 * "type": "OSSAdapter", "objectType": "KalturaPartnerConfigurationHolder" },
-	 *             "objectType": "KalturaBillingPartnerConfig"}
+	 * Get the list of available ratios
 	 */
-    public static UpdatePartnerConfigurationBuilder update(PartnerConfiguration configuration)  {
-		return new UpdatePartnerConfigurationBuilder(configuration);
+    public static ListRatioBuilder list()  {
+		return new ListRatioBuilder();
+	}
+	
+	public static class UpdateRatioBuilder extends RequestBuilder<Ratio, Ratio.Tokenizer, UpdateRatioBuilder> {
+		
+		public UpdateRatioBuilder(long id, Ratio ratio) {
+			super(Ratio.class, "ratio", "update");
+			params.add("id", id);
+			params.add("ratio", ratio);
+		}
+		
+		public void id(String multirequestToken) {
+			params.add("id", multirequestToken);
+		}
+	}
+
+	/**
+	 * Update group ratio&amp;#39;s PrecisionPrecentage
+	 * 
+	 * @param id The ratio ID
+	 * @param ratio Ratio to update for the partner
+	 */
+    public static UpdateRatioBuilder update(long id, Ratio ratio)  {
+		return new UpdateRatioBuilder(id, ratio);
 	}
 }

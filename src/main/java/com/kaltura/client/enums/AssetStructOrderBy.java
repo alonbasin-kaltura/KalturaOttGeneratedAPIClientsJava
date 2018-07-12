@@ -33,15 +33,19 @@ package com.kaltura.client.enums;
  * 
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
-public enum PartnerConfigurationType implements EnumAsString {
-	DEFAULTPAYMENTGATEWAY("DefaultPaymentGateway"),
-	ENABLEPAYMENTGATEWAYSELECTION("EnablePaymentGatewaySelection"),
-	OSSADAPTER("OSSAdapter"),
-	CONCURRENCY("Concurrency");
+public enum AssetStructOrderBy implements EnumAsString {
+	NAME_ASC("NAME_ASC"),
+	NAME_DESC("NAME_DESC"),
+	SYSTEM_NAME_ASC("SYSTEM_NAME_ASC"),
+	SYSTEM_NAME_DESC("SYSTEM_NAME_DESC"),
+	CREATE_DATE_ASC("CREATE_DATE_ASC"),
+	CREATE_DATE_DESC("CREATE_DATE_DESC"),
+	UPDATE_DATE_ASC("UPDATE_DATE_ASC"),
+	UPDATE_DATE_DESC("UPDATE_DATE_DESC");
 
 	private String value;
 
-	PartnerConfigurationType(String value) {
+	AssetStructOrderBy(String value) {
 		this.value = value;
 	}
 
@@ -54,19 +58,19 @@ public enum PartnerConfigurationType implements EnumAsString {
 		this.value = value;
 	}
 
-	public static PartnerConfigurationType get(String value) {
+	public static AssetStructOrderBy get(String value) {
 		if(value == null)
 		{
 			return null;
 		}
 		
-		// goes over PartnerConfigurationType defined values and compare the inner value with the given one:
-		for(PartnerConfigurationType item: values()) {
+		// goes over AssetStructOrderBy defined values and compare the inner value with the given one:
+		for(AssetStructOrderBy item: values()) {
 			if(item.getValue().equals(value)) {
 				return item;
 			}
 		}
 		// in case the requested value was not found in the enum values, we return the first item as default.
-		return PartnerConfigurationType.values().length > 0 ? PartnerConfigurationType.values()[0]: null;
+		return AssetStructOrderBy.values().length > 0 ? AssetStructOrderBy.values()[0]: null;
    }
 }

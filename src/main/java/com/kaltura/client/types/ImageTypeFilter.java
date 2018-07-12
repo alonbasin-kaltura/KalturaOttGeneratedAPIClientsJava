@@ -29,8 +29,6 @@ package com.kaltura.client.types;
 
 import com.google.gson.JsonObject;
 import com.kaltura.client.Params;
-import com.kaltura.client.enums.RuleConditionType;
-import com.kaltura.client.types.SlimAsset;
 import com.kaltura.client.utils.GsonParser;
 import com.kaltura.client.utils.request.MultiRequestBuilder;
 
@@ -41,69 +39,69 @@ import com.kaltura.client.utils.request.MultiRequestBuilder;
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
 
-/**
- * Asset rule filter
- */
 @SuppressWarnings("serial")
-@MultiRequestBuilder.Tokenizer(AssetRuleFilter.Tokenizer.class)
-public class AssetRuleFilter extends Filter {
+@MultiRequestBuilder.Tokenizer(ImageTypeFilter.Tokenizer.class)
+public class ImageTypeFilter extends Filter {
 	
 	public interface Tokenizer extends Filter.Tokenizer {
-		String conditionsContainType();
-		SlimAsset.Tokenizer assetApplied();
+		String idIn();
+		String ratioIdIn();
 	}
 
 	/**
-	 * Indicates which asset rule list to return by it KalturaRuleConditionType.       
-	        Default value: KalturaRuleConditionType.COUNTRY
+	 * IDs to filter by
 	 */
-	private RuleConditionType conditionsContainType;
+	private String idIn;
 	/**
-	 * Indicates if to return an asset rule list that related to specific asset
+	 * Ratio IDs to filter by
 	 */
-	private SlimAsset assetApplied;
+	private String ratioIdIn;
 
-	// conditionsContainType:
-	public RuleConditionType getConditionsContainType(){
-		return this.conditionsContainType;
+	// idIn:
+	public String getIdIn(){
+		return this.idIn;
 	}
-	public void setConditionsContainType(RuleConditionType conditionsContainType){
-		this.conditionsContainType = conditionsContainType;
-	}
-
-	public void conditionsContainType(String multirequestToken){
-		setToken("conditionsContainType", multirequestToken);
+	public void setIdIn(String idIn){
+		this.idIn = idIn;
 	}
 
-	// assetApplied:
-	public SlimAsset getAssetApplied(){
-		return this.assetApplied;
+	public void idIn(String multirequestToken){
+		setToken("idIn", multirequestToken);
 	}
-	public void setAssetApplied(SlimAsset assetApplied){
-		this.assetApplied = assetApplied;
+
+	// ratioIdIn:
+	public String getRatioIdIn(){
+		return this.ratioIdIn;
+	}
+	public void setRatioIdIn(String ratioIdIn){
+		this.ratioIdIn = ratioIdIn;
+	}
+
+	public void ratioIdIn(String multirequestToken){
+		setToken("ratioIdIn", multirequestToken);
 	}
 
 
-	public AssetRuleFilter() {
+	public ImageTypeFilter() {
 		super();
 	}
 
-	public AssetRuleFilter(JsonObject jsonObject) throws APIException {
+	public ImageTypeFilter(JsonObject jsonObject) throws APIException {
 		super(jsonObject);
 
 		if(jsonObject == null) return;
 
 		// set members values:
-		conditionsContainType = RuleConditionType.get(GsonParser.parseString(jsonObject.get("conditionsContainType")));
-		assetApplied = GsonParser.parseObject(jsonObject.getAsJsonObject("assetApplied"), SlimAsset.class);
+		idIn = GsonParser.parseString(jsonObject.get("idIn"));
+		ratioIdIn = GsonParser.parseString(jsonObject.get("ratioIdIn"));
 
 	}
 
 	public Params toParams() {
 		Params kparams = super.toParams();
-		kparams.add("objectType", "KalturaAssetRuleFilter");
-		kparams.add("conditionsContainType", this.conditionsContainType);
-		kparams.add("assetApplied", this.assetApplied);
+		kparams.add("objectType", "KalturaImageTypeFilter");
+		kparams.add("idIn", this.idIn);
+		kparams.add("ratioIdIn", this.ratioIdIn);
 		return kparams;
 	}
 

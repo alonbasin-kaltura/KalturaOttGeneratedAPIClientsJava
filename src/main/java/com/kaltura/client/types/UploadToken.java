@@ -29,8 +29,8 @@ package com.kaltura.client.types;
 
 import com.google.gson.JsonObject;
 import com.kaltura.client.Params;
-import com.kaltura.client.enums.RuleConditionType;
-import com.kaltura.client.types.SlimAsset;
+import com.kaltura.client.enums.UploadTokenStatus;
+import com.kaltura.client.types.ObjectBase;
 import com.kaltura.client.utils.GsonParser;
 import com.kaltura.client.utils.request.MultiRequestBuilder;
 
@@ -41,69 +41,81 @@ import com.kaltura.client.utils.request.MultiRequestBuilder;
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
 
-/**
- * Asset rule filter
- */
 @SuppressWarnings("serial")
-@MultiRequestBuilder.Tokenizer(AssetRuleFilter.Tokenizer.class)
-public class AssetRuleFilter extends Filter {
+@MultiRequestBuilder.Tokenizer(UploadToken.Tokenizer.class)
+public class UploadToken extends ObjectBase {
 	
-	public interface Tokenizer extends Filter.Tokenizer {
-		String conditionsContainType();
-		SlimAsset.Tokenizer assetApplied();
+	public interface Tokenizer extends ObjectBase.Tokenizer {
+		String id();
+		String status();
+		String fileSize();
+		String createDate();
+		String updateDate();
 	}
 
 	/**
-	 * Indicates which asset rule list to return by it KalturaRuleConditionType.       
-	        Default value: KalturaRuleConditionType.COUNTRY
+	 * Upload-token identifier
 	 */
-	private RuleConditionType conditionsContainType;
+	private String id;
 	/**
-	 * Indicates if to return an asset rule list that related to specific asset
+	 * Status
 	 */
-	private SlimAsset assetApplied;
+	private UploadTokenStatus status;
+	/**
+	 * File size
+	 */
+	private Double fileSize;
+	/**
+	 * Specifies when was the Asset was created. Date and time represented as epoch.
+	 */
+	private Long createDate;
+	/**
+	 * Specifies when was the Asset last updated. Date and time represented as epoch.
+	 */
+	private Long updateDate;
 
-	// conditionsContainType:
-	public RuleConditionType getConditionsContainType(){
-		return this.conditionsContainType;
+	// id:
+	public String getId(){
+		return this.id;
 	}
-	public void setConditionsContainType(RuleConditionType conditionsContainType){
-		this.conditionsContainType = conditionsContainType;
+	// status:
+	public UploadTokenStatus getStatus(){
+		return this.status;
+	}
+	// fileSize:
+	public Double getFileSize(){
+		return this.fileSize;
+	}
+	// createDate:
+	public Long getCreateDate(){
+		return this.createDate;
+	}
+	// updateDate:
+	public Long getUpdateDate(){
+		return this.updateDate;
 	}
 
-	public void conditionsContainType(String multirequestToken){
-		setToken("conditionsContainType", multirequestToken);
-	}
-
-	// assetApplied:
-	public SlimAsset getAssetApplied(){
-		return this.assetApplied;
-	}
-	public void setAssetApplied(SlimAsset assetApplied){
-		this.assetApplied = assetApplied;
-	}
-
-
-	public AssetRuleFilter() {
+	public UploadToken() {
 		super();
 	}
 
-	public AssetRuleFilter(JsonObject jsonObject) throws APIException {
+	public UploadToken(JsonObject jsonObject) throws APIException {
 		super(jsonObject);
 
 		if(jsonObject == null) return;
 
 		// set members values:
-		conditionsContainType = RuleConditionType.get(GsonParser.parseString(jsonObject.get("conditionsContainType")));
-		assetApplied = GsonParser.parseObject(jsonObject.getAsJsonObject("assetApplied"), SlimAsset.class);
+		id = GsonParser.parseString(jsonObject.get("id"));
+		status = UploadTokenStatus.get(GsonParser.parseString(jsonObject.get("status")));
+		fileSize = GsonParser.parseDouble(jsonObject.get("fileSize"));
+		createDate = GsonParser.parseLong(jsonObject.get("createDate"));
+		updateDate = GsonParser.parseLong(jsonObject.get("updateDate"));
 
 	}
 
 	public Params toParams() {
 		Params kparams = super.toParams();
-		kparams.add("objectType", "KalturaAssetRuleFilter");
-		kparams.add("conditionsContainType", this.conditionsContainType);
-		kparams.add("assetApplied", this.assetApplied);
+		kparams.add("objectType", "KalturaUploadToken");
 		return kparams;
 	}
 

@@ -25,7 +25,12 @@
 //
 // @ignore
 // ===================================================================================================
-package com.kaltura.client.enums;
+package com.kaltura.client.types;
+
+import com.google.gson.JsonObject;
+import com.kaltura.client.Params;
+import com.kaltura.client.utils.GsonParser;
+import com.kaltura.client.utils.request.MultiRequestBuilder;
 
 /**
  * This class was generated using clients-generator\exec.php
@@ -33,40 +38,54 @@ package com.kaltura.client.enums;
  * 
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
-public enum PartnerConfigurationType implements EnumAsString {
-	DEFAULTPAYMENTGATEWAY("DefaultPaymentGateway"),
-	ENABLEPAYMENTGATEWAYSELECTION("EnablePaymentGatewaySelection"),
-	OSSADAPTER("OSSAdapter"),
-	CONCURRENCY("Concurrency");
 
-	private String value;
-
-	PartnerConfigurationType(String value) {
-		this.value = value;
+@SuppressWarnings("serial")
+@MultiRequestBuilder.Tokenizer(ManualChannel.Tokenizer.class)
+public class ManualChannel extends Channel {
+	
+	public interface Tokenizer extends Channel.Tokenizer {
+		String mediaIds();
 	}
 
-	@Override
-	public String getValue() {
-		return this.value;
+	/**
+	 * A list of comma separated media ids associated with this channel, according to
+	  the order of the medias in the channel.
+	 */
+	private String mediaIds;
+
+	// mediaIds:
+	public String getMediaIds(){
+		return this.mediaIds;
+	}
+	public void setMediaIds(String mediaIds){
+		this.mediaIds = mediaIds;
 	}
 
-	public void setValue(String value) {
-		this.value = value;
+	public void mediaIds(String multirequestToken){
+		setToken("mediaIds", multirequestToken);
 	}
 
-	public static PartnerConfigurationType get(String value) {
-		if(value == null)
-		{
-			return null;
-		}
-		
-		// goes over PartnerConfigurationType defined values and compare the inner value with the given one:
-		for(PartnerConfigurationType item: values()) {
-			if(item.getValue().equals(value)) {
-				return item;
-			}
-		}
-		// in case the requested value was not found in the enum values, we return the first item as default.
-		return PartnerConfigurationType.values().length > 0 ? PartnerConfigurationType.values()[0]: null;
-   }
+
+	public ManualChannel() {
+		super();
+	}
+
+	public ManualChannel(JsonObject jsonObject) throws APIException {
+		super(jsonObject);
+
+		if(jsonObject == null) return;
+
+		// set members values:
+		mediaIds = GsonParser.parseString(jsonObject.get("mediaIds"));
+
+	}
+
+	public Params toParams() {
+		Params kparams = super.toParams();
+		kparams.add("objectType", "KalturaManualChannel");
+		kparams.add("mediaIds", this.mediaIds);
+		return kparams;
+	}
+
 }
+

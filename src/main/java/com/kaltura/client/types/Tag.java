@@ -29,10 +29,11 @@ package com.kaltura.client.types;
 
 import com.google.gson.JsonObject;
 import com.kaltura.client.Params;
-import com.kaltura.client.enums.RuleConditionType;
-import com.kaltura.client.types.SlimAsset;
+import com.kaltura.client.types.ObjectBase;
 import com.kaltura.client.utils.GsonParser;
 import com.kaltura.client.utils.request.MultiRequestBuilder;
+import com.kaltura.client.utils.request.RequestBuilder;
+import java.util.List;
 
 /**
  * This class was generated using clients-generator\exec.php
@@ -41,69 +42,94 @@ import com.kaltura.client.utils.request.MultiRequestBuilder;
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
 
-/**
- * Asset rule filter
- */
 @SuppressWarnings("serial")
-@MultiRequestBuilder.Tokenizer(AssetRuleFilter.Tokenizer.class)
-public class AssetRuleFilter extends Filter {
+@MultiRequestBuilder.Tokenizer(Tag.Tokenizer.class)
+public class Tag extends ObjectBase {
 	
-	public interface Tokenizer extends Filter.Tokenizer {
-		String conditionsContainType();
-		SlimAsset.Tokenizer assetApplied();
+	public interface Tokenizer extends ObjectBase.Tokenizer {
+		String id();
+		String type();
+		String tag();
+		RequestBuilder.ListTokenizer<TranslationToken.Tokenizer> multilingualTag();
 	}
 
 	/**
-	 * Indicates which asset rule list to return by it KalturaRuleConditionType.       
-	        Default value: KalturaRuleConditionType.COUNTRY
+	 * Tag id
 	 */
-	private RuleConditionType conditionsContainType;
+	private Long id;
 	/**
-	 * Indicates if to return an asset rule list that related to specific asset
+	 * Tag Type
 	 */
-	private SlimAsset assetApplied;
+	private Integer type;
+	/**
+	 * Tag
+	 */
+	private String tag;
+	/**
+	 * Tag
+	 */
+	private List<TranslationToken> multilingualTag;
 
-	// conditionsContainType:
-	public RuleConditionType getConditionsContainType(){
-		return this.conditionsContainType;
+	// id:
+	public Long getId(){
+		return this.id;
 	}
-	public void setConditionsContainType(RuleConditionType conditionsContainType){
-		this.conditionsContainType = conditionsContainType;
+	// type:
+	public Integer getType(){
+		return this.type;
 	}
-
-	public void conditionsContainType(String multirequestToken){
-		setToken("conditionsContainType", multirequestToken);
-	}
-
-	// assetApplied:
-	public SlimAsset getAssetApplied(){
-		return this.assetApplied;
-	}
-	public void setAssetApplied(SlimAsset assetApplied){
-		this.assetApplied = assetApplied;
+	public void setType(Integer type){
+		this.type = type;
 	}
 
+	public void type(String multirequestToken){
+		setToken("type", multirequestToken);
+	}
 
-	public AssetRuleFilter() {
+	// tag:
+	public String getTag(){
+		return this.tag;
+	}
+	public void setTag(String tag){
+		this.tag = tag;
+	}
+
+	public void tag(String multirequestToken){
+		setToken("tag", multirequestToken);
+	}
+
+	// multilingualTag:
+	public List<TranslationToken> getMultilingualTag(){
+		return this.multilingualTag;
+	}
+	public void setMultilingualTag(List<TranslationToken> multilingualTag){
+		this.multilingualTag = multilingualTag;
+	}
+
+
+	public Tag() {
 		super();
 	}
 
-	public AssetRuleFilter(JsonObject jsonObject) throws APIException {
+	public Tag(JsonObject jsonObject) throws APIException {
 		super(jsonObject);
 
 		if(jsonObject == null) return;
 
 		// set members values:
-		conditionsContainType = RuleConditionType.get(GsonParser.parseString(jsonObject.get("conditionsContainType")));
-		assetApplied = GsonParser.parseObject(jsonObject.getAsJsonObject("assetApplied"), SlimAsset.class);
+		id = GsonParser.parseLong(jsonObject.get("id"));
+		type = GsonParser.parseInt(jsonObject.get("type"));
+		tag = GsonParser.parseString(jsonObject.get("tag"));
+		multilingualTag = GsonParser.parseArray(jsonObject.getAsJsonArray("multilingualTag"), TranslationToken.class);
 
 	}
 
 	public Params toParams() {
 		Params kparams = super.toParams();
-		kparams.add("objectType", "KalturaAssetRuleFilter");
-		kparams.add("conditionsContainType", this.conditionsContainType);
-		kparams.add("assetApplied", this.assetApplied);
+		kparams.add("objectType", "KalturaTag");
+		kparams.add("type", this.type);
+		kparams.add("tag", this.tag);
+		kparams.add("multilingualTag", this.multilingualTag);
 		return kparams;
 	}
 

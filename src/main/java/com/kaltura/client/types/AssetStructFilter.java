@@ -29,8 +29,6 @@ package com.kaltura.client.types;
 
 import com.google.gson.JsonObject;
 import com.kaltura.client.Params;
-import com.kaltura.client.enums.RuleConditionType;
-import com.kaltura.client.types.SlimAsset;
 import com.kaltura.client.utils.GsonParser;
 import com.kaltura.client.utils.request.MultiRequestBuilder;
 
@@ -42,68 +40,90 @@ import com.kaltura.client.utils.request.MultiRequestBuilder;
  */
 
 /**
- * Asset rule filter
+ * Filtering Asset Structs
  */
 @SuppressWarnings("serial")
-@MultiRequestBuilder.Tokenizer(AssetRuleFilter.Tokenizer.class)
-public class AssetRuleFilter extends Filter {
+@MultiRequestBuilder.Tokenizer(AssetStructFilter.Tokenizer.class)
+public class AssetStructFilter extends Filter {
 	
 	public interface Tokenizer extends Filter.Tokenizer {
-		String conditionsContainType();
-		SlimAsset.Tokenizer assetApplied();
+		String idIn();
+		String metaIdEqual();
+		String isProtectedEqual();
 	}
 
 	/**
-	 * Indicates which asset rule list to return by it KalturaRuleConditionType.       
-	        Default value: KalturaRuleConditionType.COUNTRY
+	 * Comma separated identifiers
 	 */
-	private RuleConditionType conditionsContainType;
+	private String idIn;
 	/**
-	 * Indicates if to return an asset rule list that related to specific asset
+	 * Filter Asset Structs that contain a specific meta id
 	 */
-	private SlimAsset assetApplied;
+	private Long metaIdEqual;
+	/**
+	 * Filter Asset Structs by isProtectedEqual value
+	 */
+	private Boolean isProtectedEqual;
 
-	// conditionsContainType:
-	public RuleConditionType getConditionsContainType(){
-		return this.conditionsContainType;
+	// idIn:
+	public String getIdIn(){
+		return this.idIn;
 	}
-	public void setConditionsContainType(RuleConditionType conditionsContainType){
-		this.conditionsContainType = conditionsContainType;
-	}
-
-	public void conditionsContainType(String multirequestToken){
-		setToken("conditionsContainType", multirequestToken);
-	}
-
-	// assetApplied:
-	public SlimAsset getAssetApplied(){
-		return this.assetApplied;
-	}
-	public void setAssetApplied(SlimAsset assetApplied){
-		this.assetApplied = assetApplied;
+	public void setIdIn(String idIn){
+		this.idIn = idIn;
 	}
 
+	public void idIn(String multirequestToken){
+		setToken("idIn", multirequestToken);
+	}
 
-	public AssetRuleFilter() {
+	// metaIdEqual:
+	public Long getMetaIdEqual(){
+		return this.metaIdEqual;
+	}
+	public void setMetaIdEqual(Long metaIdEqual){
+		this.metaIdEqual = metaIdEqual;
+	}
+
+	public void metaIdEqual(String multirequestToken){
+		setToken("metaIdEqual", multirequestToken);
+	}
+
+	// isProtectedEqual:
+	public Boolean getIsProtectedEqual(){
+		return this.isProtectedEqual;
+	}
+	public void setIsProtectedEqual(Boolean isProtectedEqual){
+		this.isProtectedEqual = isProtectedEqual;
+	}
+
+	public void isProtectedEqual(String multirequestToken){
+		setToken("isProtectedEqual", multirequestToken);
+	}
+
+
+	public AssetStructFilter() {
 		super();
 	}
 
-	public AssetRuleFilter(JsonObject jsonObject) throws APIException {
+	public AssetStructFilter(JsonObject jsonObject) throws APIException {
 		super(jsonObject);
 
 		if(jsonObject == null) return;
 
 		// set members values:
-		conditionsContainType = RuleConditionType.get(GsonParser.parseString(jsonObject.get("conditionsContainType")));
-		assetApplied = GsonParser.parseObject(jsonObject.getAsJsonObject("assetApplied"), SlimAsset.class);
+		idIn = GsonParser.parseString(jsonObject.get("idIn"));
+		metaIdEqual = GsonParser.parseLong(jsonObject.get("metaIdEqual"));
+		isProtectedEqual = GsonParser.parseBoolean(jsonObject.get("isProtectedEqual"));
 
 	}
 
 	public Params toParams() {
 		Params kparams = super.toParams();
-		kparams.add("objectType", "KalturaAssetRuleFilter");
-		kparams.add("conditionsContainType", this.conditionsContainType);
-		kparams.add("assetApplied", this.assetApplied);
+		kparams.add("objectType", "KalturaAssetStructFilter");
+		kparams.add("idIn", this.idIn);
+		kparams.add("metaIdEqual", this.metaIdEqual);
+		kparams.add("isProtectedEqual", this.isProtectedEqual);
 		return kparams;
 	}
 

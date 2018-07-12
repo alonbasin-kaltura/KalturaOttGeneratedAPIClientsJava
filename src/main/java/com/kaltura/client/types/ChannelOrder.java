@@ -29,8 +29,9 @@ package com.kaltura.client.types;
 
 import com.google.gson.JsonObject;
 import com.kaltura.client.Params;
-import com.kaltura.client.enums.RuleConditionType;
-import com.kaltura.client.types.SlimAsset;
+import com.kaltura.client.enums.ChannelOrderBy;
+import com.kaltura.client.types.DynamicOrderBy;
+import com.kaltura.client.types.ObjectBase;
 import com.kaltura.client.utils.GsonParser;
 import com.kaltura.client.utils.request.MultiRequestBuilder;
 
@@ -42,68 +43,87 @@ import com.kaltura.client.utils.request.MultiRequestBuilder;
  */
 
 /**
- * Asset rule filter
+ * Channel order details
  */
 @SuppressWarnings("serial")
-@MultiRequestBuilder.Tokenizer(AssetRuleFilter.Tokenizer.class)
-public class AssetRuleFilter extends Filter {
+@MultiRequestBuilder.Tokenizer(ChannelOrder.Tokenizer.class)
+public class ChannelOrder extends ObjectBase {
 	
-	public interface Tokenizer extends Filter.Tokenizer {
-		String conditionsContainType();
-		SlimAsset.Tokenizer assetApplied();
+	public interface Tokenizer extends ObjectBase.Tokenizer {
+		DynamicOrderBy.Tokenizer dynamicOrderBy();
+		String orderBy();
+		String period();
 	}
 
 	/**
-	 * Indicates which asset rule list to return by it KalturaRuleConditionType.       
-	        Default value: KalturaRuleConditionType.COUNTRY
+	 * Channel dynamic order by (meta)
 	 */
-	private RuleConditionType conditionsContainType;
+	private DynamicOrderBy dynamicOrderBy;
 	/**
-	 * Indicates if to return an asset rule list that related to specific asset
+	 * Channel order by
 	 */
-	private SlimAsset assetApplied;
+	private ChannelOrderBy orderBy;
+	/**
+	 * Sliding window period in minutes, used only when ordering by LIKES_DESC /
+	  VOTES_DESC / RATINGS_DESC / VIEWS_DESC
+	 */
+	private Integer period;
 
-	// conditionsContainType:
-	public RuleConditionType getConditionsContainType(){
-		return this.conditionsContainType;
+	// dynamicOrderBy:
+	public DynamicOrderBy getDynamicOrderBy(){
+		return this.dynamicOrderBy;
 	}
-	public void setConditionsContainType(RuleConditionType conditionsContainType){
-		this.conditionsContainType = conditionsContainType;
-	}
-
-	public void conditionsContainType(String multirequestToken){
-		setToken("conditionsContainType", multirequestToken);
-	}
-
-	// assetApplied:
-	public SlimAsset getAssetApplied(){
-		return this.assetApplied;
-	}
-	public void setAssetApplied(SlimAsset assetApplied){
-		this.assetApplied = assetApplied;
+	public void setDynamicOrderBy(DynamicOrderBy dynamicOrderBy){
+		this.dynamicOrderBy = dynamicOrderBy;
 	}
 
+	// orderBy:
+	public ChannelOrderBy getOrderBy(){
+		return this.orderBy;
+	}
+	public void setOrderBy(ChannelOrderBy orderBy){
+		this.orderBy = orderBy;
+	}
 
-	public AssetRuleFilter() {
+	public void orderBy(String multirequestToken){
+		setToken("orderBy", multirequestToken);
+	}
+
+	// period:
+	public Integer getPeriod(){
+		return this.period;
+	}
+	public void setPeriod(Integer period){
+		this.period = period;
+	}
+
+	public void period(String multirequestToken){
+		setToken("period", multirequestToken);
+	}
+
+
+	public ChannelOrder() {
 		super();
 	}
 
-	public AssetRuleFilter(JsonObject jsonObject) throws APIException {
+	public ChannelOrder(JsonObject jsonObject) throws APIException {
 		super(jsonObject);
 
 		if(jsonObject == null) return;
 
 		// set members values:
-		conditionsContainType = RuleConditionType.get(GsonParser.parseString(jsonObject.get("conditionsContainType")));
-		assetApplied = GsonParser.parseObject(jsonObject.getAsJsonObject("assetApplied"), SlimAsset.class);
+		dynamicOrderBy = GsonParser.parseObject(jsonObject.getAsJsonObject("dynamicOrderBy"), DynamicOrderBy.class);
+		orderBy = ChannelOrderBy.get(GsonParser.parseString(jsonObject.get("orderBy")));
+		period = GsonParser.parseInt(jsonObject.get("period"));
 
 	}
 
 	public Params toParams() {
 		Params kparams = super.toParams();
-		kparams.add("objectType", "KalturaAssetRuleFilter");
-		kparams.add("conditionsContainType", this.conditionsContainType);
-		kparams.add("assetApplied", this.assetApplied);
+		kparams.add("objectType", "KalturaChannelOrder");
+		kparams.add("dynamicOrderBy", this.dynamicOrderBy);
+		kparams.add("orderBy", this.orderBy);
+		kparams.add("period", this.period);
 		return kparams;
 	}
 

@@ -33,15 +33,16 @@ package com.kaltura.client.enums;
  * 
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
-public enum PartnerConfigurationType implements EnumAsString {
-	DEFAULTPAYMENTGATEWAY("DefaultPaymentGateway"),
-	ENABLEPAYMENTGATEWAYSELECTION("EnablePaymentGatewaySelection"),
-	OSSADAPTER("OSSAdapter"),
-	CONCURRENCY("Concurrency");
+public enum MetaDataType implements EnumAsString {
+	STRING("STRING"),
+	MULTILINGUAL_STRING("MULTILINGUAL_STRING"),
+	NUMBER("NUMBER"),
+	BOOLEAN("BOOLEAN"),
+	DATE("DATE");
 
 	private String value;
 
-	PartnerConfigurationType(String value) {
+	MetaDataType(String value) {
 		this.value = value;
 	}
 
@@ -54,19 +55,19 @@ public enum PartnerConfigurationType implements EnumAsString {
 		this.value = value;
 	}
 
-	public static PartnerConfigurationType get(String value) {
+	public static MetaDataType get(String value) {
 		if(value == null)
 		{
 			return null;
 		}
 		
-		// goes over PartnerConfigurationType defined values and compare the inner value with the given one:
-		for(PartnerConfigurationType item: values()) {
+		// goes over MetaDataType defined values and compare the inner value with the given one:
+		for(MetaDataType item: values()) {
 			if(item.getValue().equals(value)) {
 				return item;
 			}
 		}
 		// in case the requested value was not found in the enum values, we return the first item as default.
-		return PartnerConfigurationType.values().length > 0 ? PartnerConfigurationType.values()[0]: null;
+		return MetaDataType.values().length > 0 ? MetaDataType.values()[0]: null;
    }
 }

@@ -33,15 +33,23 @@ package com.kaltura.client.enums;
  * 
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
-public enum PartnerConfigurationType implements EnumAsString {
-	DEFAULTPAYMENTGATEWAY("DefaultPaymentGateway"),
-	ENABLEPAYMENTGATEWAYSELECTION("EnablePaymentGatewaySelection"),
-	OSSADAPTER("OSSAdapter"),
-	CONCURRENCY("Concurrency");
+public enum ChannelOrderBy implements EnumAsString {
+	ORDER_NUM("ORDER_NUM"),
+	RELEVANCY_DESC("RELEVANCY_DESC"),
+	NAME_ASC("NAME_ASC"),
+	NAME_DESC("NAME_DESC"),
+	VIEWS_DESC("VIEWS_DESC"),
+	RATINGS_DESC("RATINGS_DESC"),
+	VOTES_DESC("VOTES_DESC"),
+	START_DATE_DESC("START_DATE_DESC"),
+	START_DATE_ASC("START_DATE_ASC"),
+	LIKES_DESC("LIKES_DESC"),
+	CREATE_DATE_ASC("CREATE_DATE_ASC"),
+	CREATE_DATE_DESC("CREATE_DATE_DESC");
 
 	private String value;
 
-	PartnerConfigurationType(String value) {
+	ChannelOrderBy(String value) {
 		this.value = value;
 	}
 
@@ -54,19 +62,19 @@ public enum PartnerConfigurationType implements EnumAsString {
 		this.value = value;
 	}
 
-	public static PartnerConfigurationType get(String value) {
+	public static ChannelOrderBy get(String value) {
 		if(value == null)
 		{
 			return null;
 		}
 		
-		// goes over PartnerConfigurationType defined values and compare the inner value with the given one:
-		for(PartnerConfigurationType item: values()) {
+		// goes over ChannelOrderBy defined values and compare the inner value with the given one:
+		for(ChannelOrderBy item: values()) {
 			if(item.getValue().equals(value)) {
 				return item;
 			}
 		}
 		// in case the requested value was not found in the enum values, we return the first item as default.
-		return PartnerConfigurationType.values().length > 0 ? PartnerConfigurationType.values()[0]: null;
+		return ChannelOrderBy.values().length > 0 ? ChannelOrderBy.values()[0]: null;
    }
 }

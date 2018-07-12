@@ -33,15 +33,17 @@ package com.kaltura.client.enums;
  * 
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
-public enum PartnerConfigurationType implements EnumAsString {
-	DEFAULTPAYMENTGATEWAY("DefaultPaymentGateway"),
-	ENABLEPAYMENTGATEWAYSELECTION("EnablePaymentGatewaySelection"),
-	OSSADAPTER("OSSAdapter"),
-	CONCURRENCY("Concurrency");
+public enum ImageObjectType implements EnumAsString {
+	MEDIA_ASSET("MEDIA_ASSET"),
+	PROGRAM_ASSET("PROGRAM_ASSET"),
+	CHANNEL("CHANNEL"),
+	CATEGORY("CATEGORY"),
+	PARTNER("PARTNER"),
+	IMAGE_TYPE("IMAGE_TYPE");
 
 	private String value;
 
-	PartnerConfigurationType(String value) {
+	ImageObjectType(String value) {
 		this.value = value;
 	}
 
@@ -54,19 +56,19 @@ public enum PartnerConfigurationType implements EnumAsString {
 		this.value = value;
 	}
 
-	public static PartnerConfigurationType get(String value) {
+	public static ImageObjectType get(String value) {
 		if(value == null)
 		{
 			return null;
 		}
 		
-		// goes over PartnerConfigurationType defined values and compare the inner value with the given one:
-		for(PartnerConfigurationType item: values()) {
+		// goes over ImageObjectType defined values and compare the inner value with the given one:
+		for(ImageObjectType item: values()) {
 			if(item.getValue().equals(value)) {
 				return item;
 			}
 		}
 		// in case the requested value was not found in the enum values, we return the first item as default.
-		return PartnerConfigurationType.values().length > 0 ? PartnerConfigurationType.values()[0]: null;
+		return ImageObjectType.values().length > 0 ? ImageObjectType.values()[0]: null;
    }
 }

@@ -27,8 +27,8 @@
 // ===================================================================================================
 package com.kaltura.client.services;
 
-import com.kaltura.client.types.PartnerConfiguration;
-import com.kaltura.client.types.PartnerConfigurationFilter;
+import com.kaltura.client.types.AssetStructMeta;
+import com.kaltura.client.types.AssetStructMetaFilter;
 import com.kaltura.client.utils.request.ListResponseRequestBuilder;
 import com.kaltura.client.utils.request.RequestBuilder;
 
@@ -39,43 +39,51 @@ import com.kaltura.client.utils.request.RequestBuilder;
  * MANUAL CHANGES TO THIS CLASS WILL BE OVERWRITTEN.
  */
 
-public class PartnerConfigurationService {
+public class AssetStructMetaService {
 	
-	public static class ListPartnerConfigurationBuilder extends ListResponseRequestBuilder<PartnerConfiguration, PartnerConfiguration.Tokenizer, ListPartnerConfigurationBuilder> {
+	public static class ListAssetStructMetaBuilder extends ListResponseRequestBuilder<AssetStructMeta, AssetStructMeta.Tokenizer, ListAssetStructMetaBuilder> {
 		
-		public ListPartnerConfigurationBuilder(PartnerConfigurationFilter filter) {
-			super(PartnerConfiguration.class, "partnerconfiguration", "list");
+		public ListAssetStructMetaBuilder(AssetStructMetaFilter filter) {
+			super(AssetStructMeta.class, "assetstructmeta", "list");
 			params.add("filter", filter);
 		}
 	}
 
 	/**
-	 * Get the list of PartnerConfiguration
+	 * Return a list of asset struct metas for the account with optional filter
 	 * 
-	 * @param filter filter by PartnerConfiguration type
+	 * @param filter Filter parameters for filtering out the result
 	 */
-    public static ListPartnerConfigurationBuilder list(PartnerConfigurationFilter filter)  {
-		return new ListPartnerConfigurationBuilder(filter);
+    public static ListAssetStructMetaBuilder list(AssetStructMetaFilter filter)  {
+		return new ListAssetStructMetaBuilder(filter);
 	}
 	
-	public static class UpdatePartnerConfigurationBuilder extends RequestBuilder<Boolean, String, UpdatePartnerConfigurationBuilder> {
+	public static class UpdateAssetStructMetaBuilder extends RequestBuilder<AssetStructMeta, AssetStructMeta.Tokenizer, UpdateAssetStructMetaBuilder> {
 		
-		public UpdatePartnerConfigurationBuilder(PartnerConfiguration configuration) {
-			super(Boolean.class, "partnerconfiguration", "update");
-			params.add("configuration", configuration);
+		public UpdateAssetStructMetaBuilder(long assetStructId, long metaId, AssetStructMeta assetStructMeta) {
+			super(AssetStructMeta.class, "assetstructmeta", "update");
+			params.add("assetStructId", assetStructId);
+			params.add("metaId", metaId);
+			params.add("assetStructMeta", assetStructMeta);
+		}
+		
+		public void assetStructId(String multirequestToken) {
+			params.add("assetStructId", multirequestToken);
+		}
+		
+		public void metaId(String multirequestToken) {
+			params.add("metaId", multirequestToken);
 		}
 	}
 
 	/**
-	 * Update Partner Configuration
+	 * Update Asset struct meta
 	 * 
-	 * @param configuration Partner Configuration
-	 *             possible configuration type: 
-	 *             "configuration": { "value": 0, "partner_configuration_type": {
-	 * "type": "OSSAdapter", "objectType": "KalturaPartnerConfigurationHolder" },
-	 *             "objectType": "KalturaBillingPartnerConfig"}
+	 * @param assetStructId AssetStruct Identifier
+	 * @param metaId Meta Identifier
+	 * @param assetStructMeta AssetStructMeta Object
 	 */
-    public static UpdatePartnerConfigurationBuilder update(PartnerConfiguration configuration)  {
-		return new UpdatePartnerConfigurationBuilder(configuration);
+    public static UpdateAssetStructMetaBuilder update(long assetStructId, long metaId, AssetStructMeta assetStructMeta)  {
+		return new UpdateAssetStructMetaBuilder(assetStructId, metaId, assetStructMeta);
 	}
 }
