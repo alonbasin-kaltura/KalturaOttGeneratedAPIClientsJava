@@ -124,20 +124,26 @@ public class AssetHistoryCleanTests extends BaseTest {
         addBookmarkBuilder = add(bookmark).setKs(masterUserKs);
         executor.executeSync(addBookmarkBuilder);
 
-        // assetHistory/action/clean
+        // history filter
         AssetHistoryFilter assetHistoryFilter = new AssetHistoryFilter();
-        assetHistoryFilter.setAssetIdIn(String.valueOf(movie.getId()));
         assetHistoryFilter.setStatusEqual(WatchStatus.ALL);
 
+        // verify 2 bookmarks were added
+        Response<ListResponse<AssetHistory>> assetHistoryListResponse = executor.executeSync(list(assetHistoryFilter)
+                .setKs(masterUserKs));
+        assertThat(assetHistoryListResponse.results.getTotalCount()).isEqualTo(2);
+
+        // assetHistory/action/clean
+        assetHistoryFilter.setAssetIdIn(String.valueOf(movie.getId()));
         CleanAssetHistoryBuilder cleanAssetHistoryBuilder = clean(assetHistoryFilter);
         cleanAssetHistoryBuilder.setKs(masterUserKs);
         executor.executeSync(cleanAssetHistoryBuilder);
 
-        // Update assetHistoryFilter object (assetIdIn = null)
-        assetHistoryFilter.setAssetIdIn(null);
+        // Update assetHistoryFilter object (assetIdIn = "")
+        assetHistoryFilter.setAssetIdIn("");
 
         // assetHistory/action/list - after clean - only asset id 2 returned (was not cleaned)
-        Response<ListResponse<AssetHistory>> assetHistoryListResponse = executor.executeSync(list(assetHistoryFilter)
+        assetHistoryListResponse = executor.executeSync(list(assetHistoryFilter)
                 .setKs(masterUserKs));
 
         assertThat(assetHistoryListResponse.results.getTotalCount()).isEqualTo(1);
@@ -167,21 +173,27 @@ public class AssetHistoryCleanTests extends BaseTest {
         addBookmarkBuilder = add(bookmark).setKs(masterUserKs);
         executor.executeSync(addBookmarkBuilder);
 
-        //assetHistory/action/clean - only episode type (episode)
+        // history filter
         AssetHistoryFilter assetHistoryFilter = new AssetHistoryFilter();
-        assetHistoryFilter.setTypeIn(String.valueOf(getMediaTypeId(EPISODE)));
         assetHistoryFilter.setStatusEqual(WatchStatus.ALL);
+
+        // verify 2 bookmarks were added
+        Response<ListResponse<AssetHistory>> assetHistoryListResponse = executor.executeSync(list(assetHistoryFilter)
+                .setKs(masterUserKs));
+        assertThat(assetHistoryListResponse.results.getTotalCount()).isEqualTo(2);
+
+        //assetHistory/action/clean - only episode type (episode)
+        assetHistoryFilter.setTypeIn(String.valueOf(getMediaTypeId(EPISODE)));
 
         CleanAssetHistoryBuilder cleanAssetHistoryBuilder = clean(assetHistoryFilter);
         cleanAssetHistoryBuilder.setKs(masterUserKs);
         executor.executeSync(cleanAssetHistoryBuilder);
 
-        // Update assetHistoryFilter object (assetIdIn = null)
-        assetHistoryFilter.setTypeIn(null);
+        // Update assetHistoryFilter object (typeIn = null)
+        assetHistoryFilter.setTypeIn("");
 
         // assetHistory/action/list - after clean - only movie returned (was not cleaned)
-        Response<ListResponse<AssetHistory>> assetHistoryListResponse = executor.executeSync(list(assetHistoryFilter)
-                .setKs(masterUserKs));
+        assetHistoryListResponse = executor.executeSync(list(assetHistoryFilter).setKs(masterUserKs));
 
         assertThat(assetHistoryListResponse.results.getTotalCount()).isEqualTo(1);
         assertThat(assetHistoryListResponse.results.getObjects().get(0).getAssetId()).isEqualTo(movie.getId());
