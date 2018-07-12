@@ -300,4 +300,22 @@ public class DBUtils extends BaseUtils {
         filter.setKSql(query);
         return (List<ProgramAsset>)(List<?>) executor.executeSync(list(filter).setKs(getOperatorKs())).results.getObjects();
     }
+
+    public static int getMediaTypeId(MediaType mediaType) {
+        return getJsonArrayFromQueryResult(MEDIA_TYPE_ID_SELECT, partnerId + 1, mediaType.getValue())
+                .getJSONObject(0)
+                .getInt("id");
+    }
+
+    public static int getVirtualMediaTypeId(MediaType mediaType) {
+        return getJsonArrayFromQueryResult(MEDIA_TYPE_ID_SELECT, partnerId + 2, mediaType.getValue())
+                .getJSONObject(0)
+                .getInt("id");
+    }
+
+    public static int getMediaFileTypeName(int mediaFileId) {
+        return getJsonArrayFromQueryResult(MEDIA_FILE_TYPE_ID_SELECT, partnerId + 1, mediaFileId)
+                .getJSONObject(0)
+                .getInt("name");
+    }
 }

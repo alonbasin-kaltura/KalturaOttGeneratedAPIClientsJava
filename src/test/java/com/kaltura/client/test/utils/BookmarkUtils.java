@@ -11,8 +11,7 @@ import java.util.List;
 
 public class BookmarkUtils extends BaseUtils {
 
-    public static Bookmark addBookmark(int position, String assetId, int fileId, AssetType assetType,  BookmarkActionType actionType) {
-
+    public static Bookmark addBookmark(int position, String assetId, int fileId, AssetType assetType, BookmarkActionType actionType) {
         // instantiate Bookmark object
         Bookmark bookmark = new Bookmark();
         bookmark.setPosition(position);
@@ -29,7 +28,7 @@ public class BookmarkUtils extends BaseUtils {
         playerData.setFileId((long) fileId);
         bookmark.setPlayerData(playerData);
 
-       return  bookmark;
+        return bookmark;
     }
 
     public static  BookmarkFilter listBookmark(BookmarkOrderBy orderBy, AssetType assetType, List<String> assetIds) {
